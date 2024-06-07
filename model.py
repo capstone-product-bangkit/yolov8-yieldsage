@@ -2,6 +2,9 @@ import tensorflow as tf
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+import requests
+from io import BytesIO
+from PIL import Image
 
 
 class Model:
@@ -68,7 +71,7 @@ class Prediction:
 
         cv2.imwrite(self.output_path, output_image)
 
-        return (valid_bboxes, cpas, masks, global_mask)
+        return (valid_bboxes.tolist(), cpas.tolist(), masks.tolist(), global_mask.tolist())
 
     def __sigmoid(self, array : np.ndarray) -> np.ndarray:
         return 1 / (1 + np.exp(array)) 
@@ -147,11 +150,7 @@ class Prediction:
 
     def __thresholding(self, masks : np.ndarray, threshold = 0.25) -> np.ndarray :
         return masks > threshold
-    
-if __name__ == '__main__':
-    YieldSage = Model('yolo_saved_model')
-    image = tf.io.read_file('palm-oil-seg/test/images/44000_4000_16_2592_jpg.rf.d5ab5b5936090d89f4f030d2c0ba1fbb.jpg')
-    YieldSage.predict(image, 'output.jpg')
+
 
 
 
